@@ -4,26 +4,10 @@ import random, aiohttp
 from .utils import get_id
 from .message import Message
 from .chatroom import get_chat_room
+from .config import nicknames
 
 class CloseConnection(Exception):
     pass
-
-nicknames = [
-    '杰伦',
-    '冰冰',
-    '一叶障目',
-    '韭菜花',
-    '郭靖',
-    '黄蓉',
-    '小杨过',
-    '小龙女',
-    '雕儿',
-    '翠花',
-    '周伯通',
-    '糖醋里脊',
-    '香菇青菜',
-    '麻辣豆腐',
-]
 
 class Member:
     chatRoom = None

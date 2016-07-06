@@ -17,9 +17,9 @@ async def handle_chat(request):
 async def handle_def(request):
     return aiohttp.web.HTTPMovedPermanently('/chat')
 
-application = aiohttp.web.Application()
-application.router.add_route('GET', '/chat.ws', handle_ws)
-application.router.add_route('GET', '/chat', handle_chat)
-application.router.add_route('GET', '/chat/{roomId}', handle_chat)
-application.router.add_route('GET', '/', handle_def)
-application.router.add_static('/static/', 'static')
+app = application = aiohttp.web.Application()
+app.router.add_route('GET', '/chat.ws', handle_ws)
+app.router.add_route('GET', '/chat', handle_chat)
+app.router.add_route('GET', '/chat/{roomId}', handle_chat)
+app.router.add_route('GET', '/', handle_def)
+app.router.add_static('/static/', 'static')
