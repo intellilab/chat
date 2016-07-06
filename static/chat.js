@@ -15,6 +15,13 @@
     document.title = title;
     connect();
   }
+  function resetHeartbeat() {
+    heartbeat && clearTimeout(heartbeat);
+    heartbeat = setTimeout(function () {
+      heartbeat = null;
+      me.connected && sendData({type: 'noop'});
+    }, 30 * 1000);
+  }
   function connect() {
     list = [];
     map = {};
@@ -37,6 +44,7 @@
         init: initConn,
       }[message.type];
       if (handler) handler(message.data);
+      resetHeartbeat();
     };
     ws.onclose = function (e) {
       if (me.connected) {
@@ -64,6 +72,7 @@
     wait();
   }
   function sendData(data) {
+    resetHeartbeat();
     ws.send(JSON.stringify(data));
   }
 
@@ -222,7 +231,7 @@
     });
   }
 
-  var ws, title, list, map, roomId;
+  var ws, title, list, map, roomId, heartbeat;
   var me = {};
   var status = $('.status');
   var contents = $('.contents');
