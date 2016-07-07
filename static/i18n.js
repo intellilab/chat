@@ -11,8 +11,20 @@ var ChatI18n = function (data) {
       return args && args[+(g1 || g2) - 1] || '';
     });
   }
-  var langs = navigator.languages || [navigator.language, 'en'];
-  langs = langs.filter(function (lang) {
+  var langs = navigator.languages || [navigator.language];
+  langs = langs.reduce(function (res, lang) {
+    res.data = res.data.concat(lang.split('-').reduce(function (data, part) {
+      var item = data[0];
+      item = item ? item + '-' + part : part;
+      if (!res.uni[item]) {
+        res.uni[item] = 1;
+        data.unshift(item);
+      }
+      return data;
+    }, []));
+    return res;
+  }, {data: [], uni: {}}).data
+  .filter(function (lang) {
     return data[lang];
   });
   return {
