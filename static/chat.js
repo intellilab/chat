@@ -1,12 +1,27 @@
 !function () {
-  var ws, title, list, map, roomId;
-  var me = {};
-  var status = document.querySelector('.status');
-  var contents = document.querySelector('.contents');
-  var commands = document.querySelector('.commands');
-  var command = document.querySelector('#command');
-  var submit = document.querySelector('#submit');
-
+  function $(selector) {
+    return document.querySelector(selector);
+  }
+  function _(key, args) {
+    var translate = window.ChatI18n && window.ChatI18n.translate;
+    return translate && translate(key, args) || key;
+  }
+  function init() {
+    var matches = location.pathname.match(/\/chat\/(.*)/);
+    if (matches) {
+      roomId = matches[1];
+      title = _('Chat Room $1', [roomId]);
+    } else title = _('Public Chat Room');
+    document.title = title;
+    connect();
+  }
+  function resetHeartbeat() {
+    heartbeat && clearTimeout(heartbeat);
+    heartbeat = setTimeout(function () {
+      heartbeat = null;
+      me.connected && sendData({type: 'noop'});
+    }, 30 * 1000);
+  }
   function connect() {
     list = [];
     map = {};
@@ -14,7 +29,7 @@
     ws.onopen = function (e) {
       command.disabled = false;
       submit.disabled = false;
-      status.innerHTML = '连接成功，欢迎回来！';
+      status.innerHTML = _('Reconnected, welcome back!');
       setTimeout(function () {
         status.style.display = '';
       }, 2000);
@@ -29,6 +44,7 @@
         init: initConn,
       }[message.type];
       if (handler) handler(message.data);
+      resetHeartbeat();
     };
     ws.onclose = function (e) {
       if (me.connected) {
@@ -45,10 +61,10 @@
     status.style.display = 'block';
     function wait() {
       if (count) {
-        status.innerHTML = '连接断开，准备重连... ' + (count --);
+        status.innerHTML = _('Connection lost, wait for reconnecting... $1', [count --]);
         setTimeout(wait, 1000);
       } else {
-        status.innerHTML = '正在重连...';
+        status.innerHTML = _('Reconnecting...');
         connect();
       }
     }
@@ -56,6 +72,7 @@
     wait();
   }
   function sendData(data) {
+    resetHeartbeat();
     ws.send(JSON.stringify(data));
   }
 
@@ -81,46 +98,48 @@
     switch (type) {
       case 'welcome':
         if (data.back)
-          html = '欢迎回来，' + wrapNick(data.nick) + '！';
+          html = _('Welcome back, $1!', [wrapNick(data.nick)]);
         else
-          html = '欢迎你，' + wrapNick(data.nick) + '！';
+          html = _('Welcome, $1!', [wrapNick(data.nick)]);
         break;
       case 'add':
         if (data.back)
-          html = wrapNick(data.nick) + '刚刚回到了聊天室。';
+          html = _('$1 just came back to the room.', [wrapNick(data.nick)]);
         else
-          html = wrapNick(data.nick) + '刚刚加入了聊天。';
+          html = _('$1 just joined the room.', [wrapNick(data.nick)]);
         break;
       case 'leave':
-        html = wrapNick(data.nick) + '刚刚离开了聊天。';
+        html = _('$1 just left the room.', [wrapNick(data.nick)]);
         break;
       case 'change':
         if (data.key == 'nick')
-          html = wrapNick(data.from) + '把昵称改成了' + wrapNick(data.to) + '。';
+          html = _('$1 changed nickname to $2 .', [wrapNick(data.from), wrapNick(data.to)]);
         break;
       case 'listall':
         if (list.length)
-          html = '目前有' + (list.length + 1) + '个人参与了聊天，分别是' +
+          html = _('There are $1 people in this room: $2 and me.', [
+            list.length + 1,
             list.map(function (member) {
               return wrapNick(member.nick);
-            }).join('、') + '和我。';
+            }).join(_(', ')),
+          ]);
         else
-          html = '目前只有我一个人孤零零地在这里。';
+          html = _('There is just me, lonely me.');
         break;
       case 'message':
         if (!data.id) {
-          // 系统消息
+          // System message
           html = '<div class="system">' + data.message + '</div>';
         } else {
           if (me && data.id === me.id)
-            member = '<span class="nick me">我</span>';
+            member = '<span class="nick me">' + _('I') + '</span>';
           else
             member = wrapNick(map[data.id].nick);
-          html = member + '说：' + safeHtml(data.message);
+          html = member + _(' said: ') + safeHtml(data.message);
         }
         break;
       case 'disconnect':
-        html = '连接已断开...';
+        html = _('Connection lost...');
         break;
     }
     var msg = document.createElement('div');
@@ -212,6 +231,14 @@
     });
   }
 
+  var ws, title, list, map, roomId, heartbeat;
+  var me = {};
+  var status = $('.status');
+  var contents = $('.contents');
+  var commands = $('.commands');
+  var command = $('#command');
+  var submit = $('#submit');
+
   commands.addEventListener('submit', function (e) {
     e.preventDefault();
     var text = command.value;
@@ -243,16 +270,6 @@
     sendData(data);
     command.value = '';
   }, false);
-
-  function init() {
-    var matches = location.pathname.match(/\/chat\/(.*)/);
-    if (matches) {
-      roomId = matches[1];
-      title = '聊天室' + roomId;
-    } else title = '公共聊天室';
-    document.title = title;
-    connect();
-  }
 
   init();
 }();
