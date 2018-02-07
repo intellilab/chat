@@ -1,4 +1,3 @@
-/python
-__pycache__
-*.pyc
-/config.py
+node_modules
+/dist
+yarn.lock

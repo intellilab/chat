@@ -1,0 +1,53 @@
+{
+  "name": "chat",
+  "version": "0.0.1",
+  "description": "Chat app",
+  "scripts": {
+    "watch": "webpack --config scripts/webpack.conf.js -w",
+    "build": "NODE_ENV=production webpack --config scripts/webpack.conf.js",
+    "dev": "nodemon --watch dist/server dist/server",
+    "start": "node dist/server",
+    "lint": "eslint --ext .js,.vue src"
+  },
+  "author": "Gerald <i@gerald.top>",
+  "license": "MIT",
+  "dependencies": {
+    "koa": "^2.4.1",
+    "koa-bodyparser": "^4.0.0",
+    "koa-router": "^7.3.0",
+    "koa-send": "^4.1.2",
+    "nconf": "^0.10.0",
+    "nconf-yaml": "^1.0.2",
+    "socket.io": "^2.0.4",
+    "winston": "^2.4.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.0.0-beta.37",
+    "@babel/plugin-transform-runtime": "^7.0.0-beta.37",
+    "@babel/preset-env": "^7.0.0-beta.37",
+    "@babel/preset-stage-2": "^7.0.0-beta.37",
+    "@babel/runtime": "^7.0.0-beta.37",
+    "babel-eslint": "^8.2.1",
+    "babel-loader": "^8.0.0-beta.0",
+    "babel-minify-webpack-plugin": "^0.2.0",
+    "css-loader": "^0.28.8",
+    "eslint": "^4.15.0",
+    "eslint-config-airbnb-base": "^12.1.0",
+    "eslint-import-resolver-webpack": "^0.8.4",
+    "eslint-plugin-html": "^4.0.1",
+    "eslint-plugin-import": "^2.8.0",
+    "extract-text-webpack-plugin": "^3.0.2",
+    "friendly-errors-webpack-plugin": "^1.6.1",
+    "html-webpack-plugin": "^2.30.1",
+    "lodash.get": "^4.4.2",
+    "nodemon": "^1.14.11",
+    "postcss-loader": "^2.0.10",
+    "postcss-scss": "^1.0.3",
+    "precss": "^3.1.0",
+    "vue": "^2.5.13",
+    "vue-loader": "^14.1.1",
+    "vue-template-compiler": "^2.5.13",
+    "webpack": "^3.10.0",
+    "webpack-node-externals": "^1.6.0"
+  }
+}
