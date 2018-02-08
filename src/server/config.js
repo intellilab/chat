@@ -13,7 +13,7 @@ nconf
   HOST: '',
   PORT: 2222,
   TOKEN_KEY: '__wctoken',
-  PREFIX: '',
+  URL_PREFIX: '',
 });
 
 export default nconf;

@@ -7,7 +7,7 @@ export default function initialize(app) {
   const server = http.createServer(app.callback());
   app.listen = (...args) => server.listen(...args);
   const io = SocketIO(server, {
-    path: `${nconf.get('PREFIX')}/ws/`,
+    path: `${nconf.get('URL_PREFIX')}/ws/`,
   });
   app.io = io;
   io.route = (event, callback) => {

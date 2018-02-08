@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="fullscreen">
-      <div class="contents">
+      <div class="contents" ref="contents">
         <div class="message" v-for="message in messages" :key="message.key" v-html="message.html"></div>
       </div>
       <form class="commands" @submit.prevent="onSubmit">
@@ -190,6 +190,11 @@ export default {
   },
   watch: {
     title: 'updateTitle',
+    'messages.length'() {
+      this.$nextTick(() => {
+        this.$refs.contents.scrollTop = this.$refs.contents.scrollHeight;
+      });
+    },
   },
   methods: {
     updateTitle() {
