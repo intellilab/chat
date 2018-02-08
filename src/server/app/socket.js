@@ -1,12 +1,13 @@
 import http from 'http';
 import SocketIO from 'socket.io';
+import nconf from '../config';
 
 export default function initialize(app) {
   const events = [];
   const server = http.createServer(app.callback());
   app.listen = (...args) => server.listen(...args);
   const io = SocketIO(server, {
-    path: '/ws/',
+    path: `${nconf.get('PREFIX')}/ws/`,
   });
   app.io = io;
   io.route = (event, callback) => {

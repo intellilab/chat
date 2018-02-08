@@ -18,8 +18,8 @@
 import io from 'socket.io-client';
 import { translate } from './i18n';
 
-const dirname = window.location.pathname.replace(/[^/]*$/, '');
-const socket = io(dirname, { path: `${dirname}ws/` });
+const url = new URL('ws/', window.location);
+const socket = io(window.location.origin, { path: url.pathname });
 
 const store = {
   title: '',
