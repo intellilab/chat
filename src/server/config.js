@@ -1,4 +1,3 @@
-import path from 'path';
 import nconf from 'nconf';
 import nconfFormat from 'nconf-yaml';
 

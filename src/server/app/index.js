@@ -1,5 +1,6 @@
 import Koa from 'koa';
 import BodyParser from 'koa-bodyparser';
+import fs from 'mz/fs';
 import nconf from '../config';
 import { getLogger } from '../utils/helpers';
 import routeStatic from '../routes/static';
@@ -67,7 +68,29 @@ app.io.route('message', (client, content) => {
   });
 });
 
-app.listen(nconf.get('PORT'), nconf.get('HOST'), err => {
-  if (err) throw err;
-  logger.info(`Listening at port ${nconf.get('PORT')}...`);
-});
+async function start() {
+  const HOST = nconf.get('HOST');
+  const PORT = nconf.get('PORT');
+  const isUnixSocket = PORT && !+PORT;
+  if (isUnixSocket) {
+    try {
+      // PORT is a file, remove it
+      await fs.stat(PORT);
+      await fs.unlink(PORT);
+    } catch (e) {
+      // ignore
+    }
+  }
+  app.listen(PORT, HOST, async err => {
+    if (err) {
+      logger.error(err);
+      throw err;
+    }
+    if (isUnixSocket) {
+      await fs.chmod(PORT, 0o777);
+    }
+    logger.info(`Listening at ${HOST}:${PORT}...`);
+  });
+}
+
+start();
