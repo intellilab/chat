@@ -40,4 +40,5 @@ register('zh', {
   I: '我',
   ' said: ': '说：',
   'Connection lost...': '连接已断开...',
+  '$1, waiting for you!': '$1，你妈妈喊你回家吃饭！',
 });

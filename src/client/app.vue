@@ -25,7 +25,7 @@ const socket = io(window.location.origin, { path: url.pathname });
 const storage = getStorage();
 
 const store = {
-  title: '',
+  hidden: document.hidden,
   content: '',
   memberList: [],
   memberMap: {},
@@ -41,8 +41,11 @@ if (store.roomId) {
   store.roomTitle = translate('Chatroom $1', [store.roomId]);
 } else {
   store.roomTitle = translate('Public Chat Room');
-  store.title = store.roomTitle;
 }
+
+document.addEventListener('visibilitychange', () => {
+  store.hidden = document.hidden;
+}, false);
 
 let _key = +_get(store.messages, [store.messages.length - 1, 'key']) || 0;
 function getKey() {
@@ -74,7 +77,6 @@ socket.on('update', ({ id, nick, back }) => {
     if (me.id === id) {
       me.nick = nick;
       storage.set('me', store.me);
-      store.title = `${nick}@${store.roomTitle}`;
       showMessage('welcome', { nick, back });
       socket.emit('listAll');
     } else {
@@ -88,7 +90,6 @@ socket.on('update', ({ id, nick, back }) => {
       to: nick,
     });
     member.nick = nick;
-    if (member.id === me.id) store.title = `${nick}@${store.roomTitle}`;
   }
   me.connected = true;
 });
@@ -202,6 +203,14 @@ function sendMessage(content) {
 export default {
   data() {
     return store;
+  },
+  computed: {
+    title() {
+      if (this.hidden && this.me.nick) {
+        return translate('$1, waiting for you!', [this.me.nick]);
+      }
+      return [this.me.nick, this.roomTitle].filter(Boolean).join('@');
+    },
   },
   watch: {
     title: 'updateTitle',
