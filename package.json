@@ -7,6 +7,7 @@
     "watch": "webpack --config scripts/webpack.conf.js -w",
     "prebuild": "rm -rf dist",
     "build": "NODE_ENV=production webpack --config scripts/webpack.conf.js",
+    "postbuild": "cp -r src/static/* dist/client",
     "dev": "nodemon --watch dist/server dist/server",
     "start": "node .",
     "lint": "eslint --ext .js,.vue src"
