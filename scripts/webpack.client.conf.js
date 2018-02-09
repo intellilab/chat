@@ -1,5 +1,6 @@
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const SWPrecacheWebpackPlugin = require('sw-precache-webpack-plugin');
 const base = require('./webpack.base.conf');
 const { merge, isProd, resolve } = require('./utils');
 
@@ -39,5 +40,20 @@ const config = merge(base, {
     }),
   ],
 });
+
+if (isProd) {
+  config.plugins.push(new SWPrecacheWebpackPlugin({
+    cacheId: 'chat',
+    minify: isProd,
+    dontCacheBustUrlsMatching: /./,
+    staticFileGlobsIgnorePatterns: [/\.map$/, /\.json$/, /\.html$/],
+    runtimeCaching: [
+      {
+        urlPattern: '/',
+        handler: 'networkFirst',
+      },
+    ],
+  }));
+}
 
 module.exports = config;

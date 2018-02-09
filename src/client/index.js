@@ -5,3 +5,7 @@ const vm = new Vue({
   render: h => h(App),
 }).$mount();
 document.body.appendChild(vm.$el);
+
+if (navigator.serviceWorker) {
+  navigator.serviceWorker.register('service-worker.js');
+}
