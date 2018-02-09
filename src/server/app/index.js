@@ -31,6 +31,7 @@ app.io.route('disconnect', client => {
   if (member) {
     member.remove();
     member.room.broadcast('remove', { id: member.id });
+    logger.info('leave [%s]', member.id);
   }
 });
 

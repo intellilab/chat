@@ -16,25 +16,38 @@
 
 <script>
 import io from 'socket.io-client';
+import _get from 'lodash.get';
 import { translate } from './i18n';
+import { getStorage } from './storage';
 
 const url = new URL('ws/', window.location);
 const socket = io(window.location.origin, { path: url.pathname });
+const storage = getStorage();
 
 const store = {
   title: '',
-  me: {},
+  content: '',
   memberList: [],
   memberMap: {},
-  messages: [],
-  content: '',
+  roomId: window.location.search.slice(1),
 };
-store.roomId = window.location.search.slice(1);
+if (store.roomId !== storage.get('roomId')) storage.clear();
+storage.set('roomId', store.roomId);
+Object.assign(store, {
+  me: storage.get('me') || {},
+  messages: storage.get('messages') || [],
+});
 if (store.roomId) {
   store.roomTitle = translate('Chatroom $1', [store.roomId]);
 } else {
   store.roomTitle = translate('Public Chat Room');
   store.title = store.roomTitle;
+}
+
+let _key = +_get(store.messages, [store.messages.length - 1, 'key']) || 0;
+function getKey() {
+  _key += 1;
+  return _key;
 }
 
 function initialize() {
@@ -60,6 +73,7 @@ socket.on('update', ({ id, nick, back }) => {
     memberMap[id] = { id, nick };
     if (me.id === id) {
       me.nick = nick;
+      storage.set('me', store.me);
       store.title = `${nick}@${store.roomTitle}`;
       showMessage('welcome', { nick, back });
       socket.emit('listAll');
@@ -168,8 +182,9 @@ function showMessage(type, data) {
   if (html) {
     store.messages.push({
       html,
-      key: store.messages.length,
+      key: getKey(),
     });
+    storage.set('messages', store.messages.slice(-100));
   }
 }
 
