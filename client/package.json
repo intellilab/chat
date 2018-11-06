@@ -1,0 +1,40 @@
+{
+  "name": "chat-client",
+  "version": "0.0.0",
+  "private": true,
+  "description": "",
+  "author": "",
+  "license": "ISC",
+  "scripts": {
+    "prebuild": "npm run lint",
+    "lint": "eslint --ext .js,.vue .",
+    "analyze": "cross-env RUN_ENV=analyze npm run build",
+    "svgo": "svgo --config .svgo.yml src/resources/svg",
+    "dev": "webpack-util develop",
+    "build": "webpack-util build"
+  },
+  "engines": {
+    "node": ">=8"
+  },
+  "husky": {
+    "hooks": {
+      "pre-push": "npm run lint"
+    }
+  },
+  "devDependencies": {
+    "autoprefixer": "^9.3.1",
+    "eslint": "^5.8.0",
+    "husky": "^1.1.3",
+    "postcss-calc": "^7.0.1",
+    "postcss-scss": "^2.0.0",
+    "precss": "^3.1.2",
+    "webpack-util": "^0.1.10",
+    "webpack-util-vue": "^0.1.9"
+  },
+  "dependencies": {
+    "@babel/runtime": "^7.1.2",
+    "lodash.get": "^4.4.2",
+    "socket.io-client": "^2.1.1",
+    "vue": "^2.5.17"
+  }
+}
