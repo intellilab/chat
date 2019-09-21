@@ -4,18 +4,26 @@
   "description": "Chat app",
   "main": "server/app",
   "scripts": {
-    "start": "node ."
+    "start": "node .",
+    "lint": "eslint --ext .js ."
   },
   "author": "Gerald <i@gerald.top>",
   "license": "MIT",
+  "engines": {
+    "node": ">= 11.14"
+  },
   "dependencies": {
-    "koa": "^2.4.1",
-    "koa-bodyparser": "^4.0.0",
+    "koa": "^2.8.1",
+    "koa-bodyparser": "^4.2.1",
     "koa-router": "^7.3.0",
-    "koa-send": "^4.1.2",
+    "koa-send": "^5.0.0",
     "nconf": "^0.10.0",
     "nconf-yaml": "^1.0.2",
-    "socket.io": "^2.0.4",
-    "winston": "^2.4.0"
+    "socket.io": "^2.3.0",
+    "winston": "^3.2.1"
+  },
+  "devDependencies": {
+    "eslint": "^6.4.0",
+    "eslint-plugin-node": "^10.0.0"
   }
 }

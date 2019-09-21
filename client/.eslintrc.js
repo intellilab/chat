@@ -1,10 +1,14 @@
 module.exports = {
   root: true,
   extends: [
-    require.resolve('webpack-util/eslint'),
-    require.resolve('webpack-util/eslint/modern'),
-    require.resolve('webpack-util-vue/eslint/vue'),
+    require.resolve('@gera2ld/plaid/eslint'),
+    require.resolve('@gera2ld/plaid-vue/eslint/vue'),
   ],
+  parserOptions: {
+    ecmaFeatures: {
+      legacyDecorators: true,
+    },
+  },
   rules: {
   },
 };

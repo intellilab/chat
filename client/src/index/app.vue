@@ -2,7 +2,12 @@
   <div>
     <div class="fullscreen">
       <div class="contents" ref="contents">
-        <div class="message" v-for="message in messages" :key="message.key" v-html="message.html"></div>
+        <div
+          class="message"
+          v-for="message in messages"
+          :key="message.key"
+          v-html="message.html">
+        </div>
       </div>
       <form class="commands" @submit.prevent="onSubmit">
         <input type="text" autocomplete="off" v-model="content">
